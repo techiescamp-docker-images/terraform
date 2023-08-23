@@ -1,27 +1,28 @@
+@Library('jenkins-shared-library@main') _
 
 pipeline {
     agent{
         label 'AGENT-01'
     }
-    stages{
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-        
-        stage('Build'){
-            steps{
-                sh '''
-                docker build -t terraform-image:01 .
-                '''
+
+    stages {
+    
+        stage('Build Docker Image') {
+            agent {
+                docker {
+                    image 'techiescamp/base-image:latest'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock --privileged '
+                    reuseNode true
                 }
             }
-        stage('Scan Image') {
+            environment {
+                DOCKER_CONFIG = '/tmp/docker'
+            }
             steps {
-            sh '''
-            sudo trivy image terraform-image:01
-            '''
+                dockerBuild(
+                    versionTag: "1.0",
+                    imageName: "terraform-image"
+                )
             }
         }
     }
