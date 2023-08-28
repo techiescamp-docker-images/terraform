@@ -23,6 +23,10 @@ pipeline {
                     versionTag: "1.0",
                     imageName: "terraform-image"
                 )
+                trivyScan(
+                    imageName: "terraform-image",
+                    versionTag: "1.0"
+                )
             }
         }
     }
