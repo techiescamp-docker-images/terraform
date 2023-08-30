@@ -18,13 +18,13 @@ pipeline {
                 DOCKER_CONFIG = '/tmp/docker'
             }
             steps {
-                try {
-                    dockerBuild(
-                        versionTag: "1.0",
-                        imageName: "terraform-image"
-                    )
-                } catch (Exception buildError) {
-                    catchError(buildError) {
+                script {
+                    try {
+                        dockerBuild(
+                            versionTag: "1.0",
+                            imageName: "terraform-image"
+                        )
+                    } catch (Exception buildError) {
                         currentBuild.result = 'FAILURE'
                         error("Failed to build Docker image: ${buildError}")
                     }
@@ -34,13 +34,11 @@ pipeline {
         
         stage('Run Trivy Scan') {
             steps {
-                try {
-                    script {
+                script {
+                    try {
                         def imageNameAndTag = "terraform-image:1.0"
                         trivyScan(imageNameAndTag)
-                    }
-                } catch (Exception trivyError) {
-                    catchError(trivyError) {
+                    } catch (Exception trivyError) {
                         currentBuild.result = 'FAILURE'
                         error("Trivy scan failed: ${trivyError}")
                     }
