@@ -27,7 +27,7 @@ pipeline {
         }
         stage('Run Trivy Scan') {
             steps {
-                trivyscan(
+                trivyScan(
                     versionTag: "1.0",
                     imageName: "terraform-image"
                 )
