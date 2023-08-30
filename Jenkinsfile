@@ -27,10 +27,10 @@ pipeline {
         }
         stage('Run Trivy Scan') {
             steps {
-                script {
-                    def imageNameAndTag = "terraform-image:1.0"
-                    trivyScan(imageNameAndTag)
-                }
+                trivyScan(
+                    versionTag: "1.0",
+                    imageName: "terraform-image"
+                )
             }
         }
     }
