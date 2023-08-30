@@ -6,6 +6,21 @@ pipeline {
     }
 
     stages {
+        stage('Lint Dockerfile') {
+            agent {
+                docker {
+                    image '814200988517.dkr.ecr.us-west-2.amazonaws.com/docker-images:base-image'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock --privileged '
+                    reuseNode true
+                }
+            }
+            environment {
+                DOCKER_CONFIG = '/tmp/docker'
+            }
+            steps {
+                hadolint()
+            }
+        }
         stage('Build Docker Image') {
             agent {
                 docker {
