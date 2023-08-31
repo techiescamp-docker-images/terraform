@@ -11,4 +11,6 @@ RUN apt-get update \
 
 WORKDIR /app
 
+EXPOSE 80
+
 CMD ["terraform", "--version"]
