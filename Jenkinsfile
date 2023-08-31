@@ -50,6 +50,18 @@ pipeline {
                 }
             }
         }
+        stage('Run Slim Build') {
+            steps {
+                script {
+                    try {
+                        def slimImageInfo = [imageName: 'terraform-image', tag: '1.0']
+                        slimBuild(slimImageInfo)
+                    } catch (Exception error) {
+                        currentBuild.result = 'FAILURE'
+                        error("An error occurred: ${error}")
+                    }
+                }
+            }
     }
 
     post {
