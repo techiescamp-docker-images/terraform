@@ -55,7 +55,7 @@ pipeline {
                 script {
                     try {
                         def slimImageInfo = [imageName: 'terraform-image', tag: '1.0']
-                        slimBuild(slimImageInfo)
+                        slimImage(slimImageInfo)
                     } catch (Exception error) {
                         currentBuild.result = 'FAILURE'
                         error("An error occurred: ${error}")
