@@ -50,19 +50,19 @@ pipeline {
                 }
             }
         }
-        stage('Run Slim Build') {
+        stage('Slim Docker Image') {
             steps {
                 script {
                     try {
-                        def slimImageInfo = [imageName: 'terraform-image', tag: '1.0']
-                        slimImage(slimImageInfo)
-                    } catch (Exception error) {
+                        def imageNameAndTag = "terraform-image:1.0"
+                        slimImage(imageNameAndTag)
+                    } catch (Exception slimError) {
                         currentBuild.result = 'FAILURE'
-                        error("An error occurred: ${error}")
+                        error("Slimming the Docker image failed: ${slimError}")
                     }
                 }
             }
-    }
+        }
     }
 
     post {
