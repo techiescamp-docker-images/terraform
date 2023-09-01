@@ -58,7 +58,7 @@ pipeline {
                         slimImage(imageNameAndTag)
                     } catch (Exception slimError) {
                         currentBuild.result = 'FAILURE'
-                        error("Slimming the Docker image failed: ${slimError}")
+                        error("Slimming Docker image failed: ${slimError}")
                     }
                 }
             }
