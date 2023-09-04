@@ -67,6 +67,19 @@ pipeline {
     }
 
     post {
+        failure {
+        emailext subject: "Build Failure: ${currentBuild.fullDisplayName}",
+                body: "The build ${currentBuild.fullDisplayName} failed. Please investigate and take necessary actions.",
+                to: 'aswin@crunchops.com',
+                replyTo: 'aswin@crunchops.com',
+                mimeType: 'text/html'
+    }
+    success {
+        emailext subject: "Build Success: ${currentBuild.fullDisplayName}",
+                body: "The build ${currentBuild.fullDisplayName} succeeded. Good job!",
+                to: 'aswin@crunchops.com',
+                replyTo: 'aswin@crunchops.com',
+                mimeType: 'text/html'
         always {
             cleanWs()
         }
