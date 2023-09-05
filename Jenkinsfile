@@ -81,9 +81,6 @@ pipeline {
                 replyTo: 'aswin@crunchops.com',
                 mimeType: 'text/html'
     }
-        always {
-            cleanWs()
-        }
     }
 }
 
