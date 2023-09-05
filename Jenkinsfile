@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Lint Dockerfile') {
             steps {
-                hadolint()
+                hadoLint()
             }
         }
         stage('Build Docker Image') {
