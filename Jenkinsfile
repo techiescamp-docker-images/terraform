@@ -36,7 +36,6 @@ pipeline {
                 }
             }
         }
-        
         stage('Run Trivy Scan') {
             steps {
                 script {
@@ -67,6 +66,8 @@ pipeline {
                 }
             }
         }
+    }
+
     post {
         failure {
             emailext subject: "Build Failure: ${currentBuild.fullDisplayName}",
@@ -77,20 +78,20 @@ pipeline {
                 attachLog: true, // Attach build log to the email
                 attachmentsPattern: '**/*.log' // Attach all .log files in the workspace
                 // Configure other email options as needed
-            }
-            success {
-                emailext subject: "Build Success: ${currentBuild.fullDisplayName}",
-                    body: "The build ${currentBuild.fullDisplayName} succeeded. Good job!",
-                    to: '$DEFAULT_RECIPIENTS',
-                    replyTo: 'aswin@crunchops.com',
-                    mimeType: 'text/html'
-                // Configure other email options as needed
-            }
+        }
+        success {
+            emailext subject: "Build Success: ${currentBuild.fullDisplayName}",
+                body: "The build ${currentBuild.fullDisplayName} succeeded. Good job!",
+                to: '$DEFAULT_RECIPIENTS',
+                replyTo: 'aswin@crunchops.com',
+                mimeType: 'text/html'
+            // Configure other email options as needed
         }
     }
+
+    post {
         always {
             cleanWs()
         }
     }
-
-
+}
