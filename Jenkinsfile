@@ -69,23 +69,15 @@ pipeline {
     }
 
     post {
-        failure {
-            emailext subject: "Build Failure: ${currentBuild.fullDisplayName}",
-                body: "The build ${currentBuild.fullDisplayName} failed. Please investigate and take necessary actions.",
-                to: 'aswin@crunchops.com',
-                replyTo: 'aswin@crunchops.com',
-                mimeType: 'text/html',
-                attachLog: true, // Attach build log to the email
-                attachmentsPattern: '**/*.log' // Attach all .log files in the workspace
-                // Configure other email options as needed
-        }
         success {
-            emailext subject: "Build Success: ${currentBuild.fullDisplayName}",
-                body: "The build ${currentBuild.fullDisplayName} succeeded. Good job!",
-                to: 'aswin@crunchops.com',
-                replyTo: 'aswin@crunchops.com',
-                mimeType: 'text/html'
-            // Configure other email options as needed
+            emailext subject: "Build Successful: \${currentBuild.fullDisplayName}",
+                    body: "The build was successful. Click [here](\${BUILD_URL}) to see the details.",
+                    to: 'aswin@crunchops.com'
+        }
+        failure {
+            emailext subject: "Build Failed: \${currentBuild.fullDisplayName}",
+                    body: "The build failed. Click [here](\${BUILD_URL}) to see the details.",
+                    to: 'aswin@crunchops.com'
         }
     always {
         cleanWs()
