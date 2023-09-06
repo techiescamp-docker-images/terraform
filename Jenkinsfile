@@ -86,10 +86,11 @@ pipeline {
                     mimeType: 'text/html'
                 // Configure other email options as needed
             }
+        }
     }
         always {
             cleanWs()
         }
     }
-}
+
 
