@@ -67,20 +67,6 @@ pipeline {
                 }
             }
         }
-    }
-
-
-To integrate your AWS SES (Simple Email Service) SMTP server settings into your Jenkins pipeline, you'll need to use the Jenkins Email Extension Plugin with the emailext step. Here's how you can configure the email notifications in your pipeline using the provided SMTP server settings:
-
-groovy
-Copy code
-pipeline {
-    agent any
-
-    stages {
-        // Your build stages go here
-    }
-
     post {
         failure {
             emailext subject: "Build Failure: ${currentBuild.fullDisplayName}",
