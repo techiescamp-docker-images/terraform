@@ -72,7 +72,7 @@ pipeline {
         failure {
             emailext subject: "Build Failure: ${currentBuild.fullDisplayName}",
                 body: "The build ${currentBuild.fullDisplayName} failed. Please investigate and take necessary actions.",
-                to: 'jenkins@devopsproject.dev',
+                to: 'aswin@crunchops.com',
                 replyTo: 'aswin@crunchops.com',
                 mimeType: 'text/html',
                 attachLog: true, // Attach build log to the email
@@ -82,7 +82,7 @@ pipeline {
         success {
             emailext subject: "Build Success: ${currentBuild.fullDisplayName}",
                 body: "The build ${currentBuild.fullDisplayName} succeeded. Good job!",
-                to: 'jenkins@devopsproject.dev',
+                to: 'aswin@crunchops.com',
                 replyTo: 'aswin@crunchops.com',
                 mimeType: 'text/html'
             // Configure other email options as needed
