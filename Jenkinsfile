@@ -87,11 +87,9 @@ pipeline {
                 mimeType: 'text/html'
             // Configure other email options as needed
         }
-    }
-
-    post {
-        always {
-            cleanWs()
+    always {
+        cleanWs()
         }
     }
 }
+
