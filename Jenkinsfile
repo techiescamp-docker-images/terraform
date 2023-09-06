@@ -55,8 +55,8 @@ pipeline {
                 script {
                     try {
                         def imageNameAndTag = "terraform-image:1.0"
-                        def userPrompt = 'USER INPUT REQUIRED, PRESS <ENTER> WHEN YOU ARE DONE USING THE CONTAINER'
-                        slimImage(imageNameAndTag, userPrompt)
+                        def prompt = 'USER INPUT REQUIRED, PRESS <ENTER> WHEN YOU ARE DONE USING THE CONTAINER'
+                        slimImage(imageNameAndTag, prompt)
                     } catch (Exception slimError) {
                         currentBuild.result = 'FAILURE'
                         error("Slimming Docker image failed: ${slimError}")
