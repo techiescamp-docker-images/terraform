@@ -41,7 +41,10 @@ pipeline {
                 script {
                     try {
                         def imageNameAndTag = "terraform-image:1.0"
-                        trivyScan(imageNameAndTag)
+                        def htmlTemplate = libraryResource('/resources/trivy/html.tpl')
+                        echo "Content of html.tpl file: ${htmlTemplate}"
+
+                        trivyScan(imageNameAndTag, htmlTemplate)
                     } catch (Exception trivyError) {
                         currentBuild.result = 'FAILURE'
                         error("Trivy scan failed: ${trivyError}")
