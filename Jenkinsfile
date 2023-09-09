@@ -41,7 +41,7 @@ pipeline {
                 script {
                     try {
                         def imageNameAndTag = "terraform-image:1.0"
-                        def htmlTemplate = load 'resources/trivy/html.tpl'
+                        def htmlTemplate = readFile('resources/trivy/html.tpl')
                         echo "Content of html.tpl file: ${htmlTemplate}"
 
                         trivyScan(imageNameAndTag, htmlTemplate)
