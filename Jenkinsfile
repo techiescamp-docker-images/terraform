@@ -89,7 +89,7 @@ pipeline {
                 body: "The Terraform pipeline has successfully completed.",
                 recipientProviders: [[$class: 'CulpritsRecipientProvider']],
                 to: 'aswin@crunchops.com',
-                attachLog: true,
+                attachmentsPattern: "${reportPath}",
             )
         }
         failure {
@@ -98,7 +98,7 @@ pipeline {
                 body: "The Terraform pipeline has failed. Please investigate.",
                 recipientProviders: [[$class: 'CulpritsRecipientProvider']],
                 to: 'aswin@crunchops.com',
-                attachLog: true,
+                attachmentsPattern: "${reportPath}",
             )
         }
     always {
