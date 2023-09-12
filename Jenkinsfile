@@ -41,7 +41,14 @@ pipeline {
                 script {
                     try {
                         def imageNameAndTag = "terraform-image:1.0"
-                        trivyScan(imageNameAndTag)
+                        def trivyReportFile = trivyScan(imageNameAndTag)
+                        emailext (
+                            subject: 'Trivy Scan Report',
+                            body: 'Please find the Trivy scan report attached.',
+                            mimeType: 'text/html',
+                            to: 'aswinvj390@gmail.com.com',
+                            attachmentsPattern: "${trivyReportFile}",
+                        )
                     } catch (Exception trivyError) {
                         currentBuild.result = 'FAILURE'
                         error("Trivy scan failed: ${trivyError}")
