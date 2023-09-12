@@ -52,13 +52,11 @@ pipeline {
         stage('Send Trivy Report') {
             steps {
                 script {
-                    try {
                         def imageNameAndTag = "terraform-image:1.0"
                         def reportPath = "trivy-report.html"
                         def recipient = "aswin@crunchops.com"
                         emailReport(reportPath,imageNameAndTag, recipient)
                     }
-                }
                 }
             }
         stage('Slim Docker Image') {
