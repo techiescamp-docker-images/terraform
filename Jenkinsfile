@@ -41,7 +41,7 @@ pipeline {
                 script {
                     try {
                         def imageNameAndTag = "terraform-image:1.0"
-                        trivyScan(imageNameAndTag, htmlTemplate)
+                        trivyScan(imageNameAndTag)
                     } catch (Exception trivyError) {
                         currentBuild.result = 'FAILURE'
                         error("Trivy scan failed: ${trivyError}")
