@@ -57,9 +57,6 @@ pipeline {
                         def reportPath = "trivy-report.html"
                         def recipient = "aswin@crunchops.com"
                         emailReport(reportPath,imageNameAndTag, recipient)
-                    } catch (Exception emailError) {
-                        currentBuild.result = 'FAILURE'
-                        error("Email Send failed: ${emailError}")
                     }
                 }
                 }
