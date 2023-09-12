@@ -83,24 +83,6 @@ pipeline {
     }
 
     post {
-        success {
-            emailext(
-                subject: "Terraform Pipeline Success",
-                body: "The Terraform pipeline has successfully completed.",
-                recipientProviders: [[$class: 'CulpritsRecipientProvider']],
-                to: 'aswin@crunchops.com',
-                attachLog: true,
-            )
-        }
-        failure {
-            emailext(
-                subject: "Terraform Pipeline Failed",
-                body: "The Terraform pipeline has failed. Please investigate.",
-                recipientProviders: [[$class: 'CulpritsRecipientProvider']],
-                to: 'aswin@crunchops.com',
-                attachLog: true,
-            )
-        }
     always {
         cleanWs()
         }
