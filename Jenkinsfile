@@ -51,7 +51,9 @@ pipeline {
         }
         stage('Send Trivy Report') {
             steps {
-                def reportPath = "/home/ubuntu/trivy-report.html"
+                script {
+                    def reportPath = "/home/ubuntu/trivy-report.html"
+                }
                 emailReport(reportPath)
                 }
             }
