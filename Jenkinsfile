@@ -64,7 +64,6 @@ pipeline {
                         def imageNameAndTag = "terraform-image:1.0"
                         slimImage(imageNameAndTag)
                     } catch (Exception e) {
-                        // Handle any exceptions if needed
                         currentBuild.result = 'FAILURE'
                         error("Failed to slim Docker image: ${e.message}")
                     }
@@ -75,14 +74,22 @@ pipeline {
 
     post {
         success {
-            emailext subject: "Build Successful: \${currentBuild.fullDisplayName}",
-                    body: "The build was successful. Click [here](\${BUILD_URL}) to see the details.",
-                    to: 'aswin@crunchops.com'
+            emailext(
+                subject: "Terraform Pipeline Success",
+                body: "The Terraform pipeline has successfully completed.",
+                recipientProviders: [[$class: 'CulpritsRecipientProvider']],
+                to: 'aswin@crunchops.com',
+                attachLog: true,
+            )
         }
         failure {
-            emailext subject: "Build Failed: \${currentBuild.fullDisplayName}",
-                    body: "The build failed. Click [here](\${BUILD_URL}) to see the details.",
-                    to: 'aswin@crunchops.com'
+            emailext(
+                subject: "Terraform Pipeline Failed",
+                body: "The Terraform pipeline has failed. Please investigate.",
+                recipientProviders: [[$class: 'CulpritsRecipientProvider']],
+                to: 'aswin@crunchops.com',
+                attachLog: true,
+            )
         }
     always {
         cleanWs()
