@@ -52,11 +52,16 @@ pipeline {
         stage('Send Trivy Report') {
             steps {
                 script {
+                    try {
                         def imageNameAndTag = "terraform-image:1.0"
                         def reportPath = "trivy-report.html"
                         def recipient = "aswin@crunchops.com"
                         emailReport(reportPath,imageNameAndTag, recipient)
+                    } catch (Exception emailError) {
+                        currentBuild.result = 'FAILURE'
+                        error("Email Send failed: ${emailError}")
                     }
+                }
                 }
             }
         stage('Slim Docker Image') {
