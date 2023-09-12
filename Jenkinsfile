@@ -41,14 +41,7 @@ pipeline {
                 script {
                     try {
                         def imageNameAndTag = "terraform-image:1.0"
-                        def trivyReportFile = trivyScan(imageNameAndTag)
-                        emailext (
-                            subject: 'Trivy Scan Report',
-                            body: 'Please find the Trivy scan report attached.',
-                            mimeType: 'text/html',
-                            to: 'aswin@crunchops.com',
-                            attachmentsPattern: "${trivyReportFile}",
-                        )
+                        trivyScan(imageNameAndTag)
                     } catch (Exception trivyError) {
                         currentBuild.result = 'FAILURE'
                         error("Trivy scan failed: ${trivyError}")
@@ -56,6 +49,12 @@ pipeline {
                 }
             }
         }
+        stage('Send Trivy Report') {
+            steps {
+                def reportPath = "/home/ubuntu/trivy-report.html"
+                emailReport(reportPath)
+                }
+            }
         stage('Slim Docker Image') {
             when {
                 expression { false }
