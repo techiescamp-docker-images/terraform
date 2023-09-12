@@ -54,7 +54,7 @@ pipeline {
                 script {
                     try {
                         def imageNameAndTag = "terraform-image:1.0"
-                        def reportPath = "${WORKSPACE}/trivy-report.html"
+                        def reportPath = "trivy-report.html"
                         def recipient = "aswin@crunchops.com"
                         emailReport(reportPath,imageNameAndTag, recipient)
                     } catch (Exception emailError) {
