@@ -46,7 +46,7 @@ pipeline {
                             subject: 'Trivy Scan Report',
                             body: 'Please find the Trivy scan report attached.',
                             mimeType: 'text/html',
-                            to: 'aswinvj390@gmail.com.com',
+                            to: 'aswinvj390@gmail.com',
                             attachmentsPattern: "${trivyReportFile}",
                         )
                     } catch (Exception trivyError) {
