@@ -83,7 +83,6 @@ pipeline {
     }
 
     post {
-        always {
             success {
                 script {
                     emailNotification.sendEmailNotification('success', 'aswin@crunchops.com')
@@ -94,6 +93,7 @@ pipeline {
                     emailNotification.sendEmailNotification('failure', 'aswin@crunchops.com')
                     }
                 }
+        always {
             cleanWs()
         }
     }
