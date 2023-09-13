@@ -84,10 +84,16 @@ pipeline {
 
     post {
         always {
-            script {
-                def recipientEmail = "aswin@crunchops.com"
-                emailNotification(recipientEmail)
-            }
+            success {
+                script {
+                    emailNotification.sendEmailNotification('success', 'aswin@crunchops.com')
+                    }
+                }
+            failure {
+                script {
+                    emailNotification.sendEmailNotification('failure', 'aswin@crunchops.com')
+                    }
+                }
             cleanWs()
         }
     }
