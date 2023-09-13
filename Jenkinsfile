@@ -83,6 +83,8 @@ pipeline {
     }
 
     post {
+        def recipientEmail = "aswin@crunchops.com"
+        emailNotification(pipelineStatus, recipientEmail)
     always {
         cleanWs()
         }
