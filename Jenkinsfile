@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Checkov Scan') {
             steps {
-                checkovScan([
+                checkovDockerScan([
                     customPolicy: 'CUSTOM_DOCKER_001'
                 ])
             }
