@@ -74,10 +74,10 @@ pipeline {
                 script {
                     try {
                         ecrRegistry(
-                            ecrRepository = "${ECR_REGISTRY}/docker-images",
-                            imageName = "${imageName}",
-                            versionTag = "${versionTag}",
-                            awsRegion = "${awsRegion}"
+                            ecrRepository: "${ECR_REGISTRY}/docker-images",
+                            imageName: "${imageName}",
+                            versionTag: "${versionTag}",
+                            awsRegion: "${awsRegion}"
                         )
                     } catch (Exception pushError) {
                         currentBuild.result = 'FAILURE'
