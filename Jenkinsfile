@@ -71,7 +71,7 @@ pipeline {
         }
         stage('Push Image To ECR') {
             when {
-                branch 'develop'
+                branch 'main'
             }
             steps{
                 script {
