@@ -2,7 +2,7 @@
 
 def awsRegion = "us-west-2"
 def imageName = "terraform-image"
-def versionTag = "0.1"
+def versionTag = "1.0.0"
 def emailRecipient = "aswin@crunchops.com"
 
 pipeline {
