@@ -16,6 +16,13 @@ pipeline {
                 hadoLint()
             }
         }
+        stage('Checkov Scan') {
+            steps {
+                checkovDockerScan([
+                    customPolicy: 'CUSTOM_DOCKER_001'
+                ])
+            }
+        }
         stage('Build Docker Image') {
             agent {
                 docker {
