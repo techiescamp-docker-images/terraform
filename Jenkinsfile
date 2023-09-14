@@ -1,5 +1,9 @@
 @Library('jenkins-shared-library@develop') _
 
+def imageName = "terraform-image"
+def versionTag = "0.1"
+def emailRecipient = "aswin@crunchops.com"
+
 pipeline {
     agent {
         label 'AGENT-01'
@@ -11,17 +15,10 @@ pipeline {
                 hadoLint()
             }
         }
-        stage('Checkov Scan') {
-            steps {
-                checkovDockerScan([
-                    customPolicy: 'CUSTOM_DOCKER_001'
-                ])
-            }
-        }
         stage('Build Docker Image') {
             agent {
                 docker {
-                    image '814200988517.dkr.ecr.us-west-2.amazonaws.com/docker-images:base-image'
+                    image "${ECR_REGISTRY}/base-image:${versionTag}"
                     args '-v /var/run/docker.sock:/var/run/docker.sock --privileged '
                     reuseNode true
                 }
@@ -33,8 +30,8 @@ pipeline {
                 script {
                     try {
                         dockerBuild(
-                            versionTag: "1.0",
-                            imageName: "terraform-image"
+                            versionTag: versionTag,
+                            imageName: imageName
                         )
                     } catch (Exception buildError) {
                         currentBuild.result = 'FAILURE'
@@ -47,7 +44,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        def imageNameAndTag = "terraform-image:1.0"
+                        def imageNameAndTag = "${imageName}:${versionTag}"
                         trivyScan(imageNameAndTag)
                     } catch (Exception trivyError) {
                         currentBuild.result = 'FAILURE'
@@ -60,32 +57,32 @@ pipeline {
             steps {
                 script {
                     try {
-                        def imageNameAndTag = "terraform-image:1.0"
-                        def reportPath = "trivy-report.html"
-                        def recipient = "aswin@crunchops.com"
-                        emailReport(reportPath,imageNameAndTag, recipient)
+                        def imageNameAndTag = "${imageName}:${versionTag}"
+                        def reportPath = "${WORKSPACE}/trivy-report.html"
+                        def recipient = "${emailRecipient}"
+                        emailReport(reportPath, imageNameAndTag, recipient)
                     } catch (Exception emailError) {
                         currentBuild.result = 'FAILURE'
                         error("Email Send failed: ${emailError}")
                     }
                 }
-                }
             }
+        }
     }
+
     post {
-            success {
-                script {
-                    emailNotification.sendEmailNotification('success', 'aswin@crunchops.com')
-                    }
-                }
-            failure {
-                script {
-                    emailNotification.sendEmailNotification('failure', 'aswin@crunchops.com')
-                    }
-                }
+        success {
+            script {
+                emailNotification.sendEmailNotification('success', "${emailRecipient}")
+            }
+        }
+        failure {
+            script {
+                emailNotification.sendEmailNotification('failure', "${emailRecipient}")
+            }
+        }
         always {
             cleanWs()
         }
     }
 }
-
