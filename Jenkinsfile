@@ -11,6 +11,13 @@ pipeline {
                 hadoLint()
             }
         }
+        stage('Checkov Scan') {
+            steps {
+                checkovScan([
+                    customPolicy: 'CUSTOM_DOCKER_001'
+                ])
+            }
+        }
         stage('Build Docker Image') {
             agent {
                 docker {
@@ -64,24 +71,7 @@ pipeline {
                 }
                 }
             }
-        stage('Slim Docker Image') {
-            when {
-                expression { false }
-            }
-            steps {
-                script {
-                    try {
-                        def imageNameAndTag = "terraform-image:1.0"
-                        slimImage(imageNameAndTag)
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        error("Failed to slim Docker image: ${e.message}")
-                    }
-                }
-            }
-        }
     }
-
     post {
             success {
                 script {
