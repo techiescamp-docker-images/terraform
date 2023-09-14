@@ -1,5 +1,6 @@
 @Library('jenkins-shared-library@develop') _
 
+def awsRegion = "us-west-2"
 def imageName = "terraform-image"
 def versionTag = "0.1"
 def emailRecipient = "aswin@crunchops.com"
@@ -64,6 +65,26 @@ pipeline {
                     } catch (Exception emailError) {
                         currentBuild.result = 'FAILURE'
                         error("Email Send failed: ${emailError}")
+                    }
+                }
+            }
+        }
+        stage('Push Image To ECR') {
+            when {
+                branch 'develop'
+            }
+            steps{
+                script {
+                    try {
+                        ecrRegistry(
+                            ecrRepository = "${ECR_REGISTRY}/docker-images",
+                            imageName = "${imageName}",
+                            versionTag = "${versionTag}",
+                            awsRegion = "${awsRegion}"
+                        )
+                    } catch (Exception pushError) {
+                        currentBuild.result = 'FAILURE'
+                        error("Failed to push image to ECR: ${pushError}")
                     }
                 }
             }
