@@ -26,7 +26,7 @@ pipeline {
         stage('ECR Login') {
             steps {
                 script {
-                    ecrRegistry.ecrLogin(ecrRepository, awsRegion)
+                    ecrRegistry.ecrLogin(params.ecrRepository, params.awsRegion)
                 }
             }
         }
