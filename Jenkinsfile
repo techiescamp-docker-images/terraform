@@ -23,6 +23,13 @@ pipeline {
                 ])
             }
         }
+        stage('ECR Login') {
+            steps {
+                script {
+                    ecrRegistry.ecrLogin(ecrRepository, awsRegion)
+                }
+            }
+        }
         stage('Build Docker Image') {
             agent {
                 docker {
