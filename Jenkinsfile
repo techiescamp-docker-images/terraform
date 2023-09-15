@@ -49,6 +49,11 @@ pipeline {
             }
         }
         stage('Run Trivy Scan') {
+            agent {
+                docker {
+                    image "${ECR_REGISTRY}/base-image:${versionTag}" // Reuse the same image
+                }
+            }
             steps {
                 script {
                     try {
@@ -62,6 +67,11 @@ pipeline {
             }
         }
         stage('Send Trivy Report') {
+            agent {
+                docker {
+                    image "${ECR_REGISTRY}/base-image:${versionTag}" // Reuse the same image
+                }
+            }
             steps {
                 script {
                     try {
@@ -77,10 +87,15 @@ pipeline {
             }
         }
         stage('Push Image To ECR') {
-            when{
+            when {
                 branch 'main'
             }
-            steps{
+            agent {
+                docker {
+                    image "${ECR_REGISTRY}/base-image:${versionTag}" // Reuse the same image
+                }
+            }
+            steps {
                 script {
                     try {
                         ecrRegistry(
