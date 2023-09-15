@@ -27,8 +27,8 @@ pipeline {
             steps {
                 script {
                     ecrRegistry.ecrLogin(
-                        "params.ecrRepository: ${ECR_REGISTRY}",
-                        "params.awsRegion: ${awsRegion}"
+                        "${ECR_REGISTRY}",
+                        "${awsRegion}"
                     )
                 }
             }
