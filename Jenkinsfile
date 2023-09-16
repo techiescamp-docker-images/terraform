@@ -98,10 +98,8 @@ pipeline {
             }
         }
         stage('Push Image To ECR') {
-            agent {
-                docker {
-                    image "${ECR_REGISTRY}/base-image:${versionTag}"
-                }
+            when {
+                branch 'main'
             }
             steps {
                 script {
