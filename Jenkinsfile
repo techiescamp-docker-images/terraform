@@ -61,7 +61,8 @@ pipeline {
         stage('Run Trivy Scan') {
             agent {
                 docker {
-                    image "${ECR_REGISTRY}/base-image:${versionTag}" // Reuse the same image
+                    image "${ECR_REGISTRY}/base-image:${versionTag}"
+                    args '-v /var/run/docker.sock:/var/run/docker.sock --privileged '
                 }
             }
             steps {
@@ -79,7 +80,7 @@ pipeline {
         stage('Send Trivy Report') {
             agent {
                 docker {
-                    image "${ECR_REGISTRY}/base-image:${versionTag}" // Reuse the same image
+                    image "${ECR_REGISTRY}/base-image:${versionTag}"
                 }
             }
             steps {
@@ -102,7 +103,7 @@ pipeline {
             }
             agent {
                 docker {
-                    image "${ECR_REGISTRY}/base-image:${versionTag}" // Reuse the same image
+                    image "${ECR_REGISTRY}/base-image:${versionTag}"
                 }
             }
             steps {
