@@ -62,7 +62,6 @@ pipeline {
             agent {
                 docker {
                     image "${ECR_REGISTRY}/base-image:${versionTag}"
-                    args '-v /var/run/docker.sock:/var/run/docker.sock --privileged '
                 }
             }
             steps {
