@@ -7,7 +7,7 @@ def emailRecipient = "aswin@crunchops.com"
 
 pipeline {
     agent {
-        label 'AGENT-01'
+        docker { image '814200988517.dkr.ecr.us-west-2.amazonaws.com/base-image:1.0.0' }
     }
 
     stages {
