@@ -9,6 +9,3 @@ RUN apt-get update \
     && mv terraform /usr/local/bin/ \
     && rm terraform_1.5.5_linux_amd64.zip
 
-WORKDIR /app
-
-EXPOSE 80

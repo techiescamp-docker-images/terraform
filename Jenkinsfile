@@ -1,13 +1,12 @@
 @Library('jenkins-shared-library@develop') _
 
-def awsRegion = "us-west-2"
-def imageName = "terraform-image"
-def versionTag = "1.0.0"
-def emailRecipient = "aswin@crunchops.com"
-
 pipeline {
     agent {
-        docker { image '814200988517.dkr.ecr.us-west-2.amazonaws.com/base-image:1.0.0' }
+        docker {
+            image '814200988517.dkr.ecr.us-west-2.amazonaws.com/base-image:docker-base-image-1.0.1'
+            args '-v /var/run/docker.sock:/var/run/docker.sock --privileged -u root'
+            reuseNode true
+            }
     }
 
     stages {
@@ -16,40 +15,12 @@ pipeline {
                 hadoLint()
             }
         }
-        stage('Checkov Scan') {
-            steps {
-                checkovDockerScan([
-                    customPolicy: 'CUSTOM_DOCKER_001'
-                ])
-            }
-        }
-        stage('ECR Login') {
-            steps {
-                script {
-                    ecrRegistry.ecrLogin(
-                        "${ECR_REGISTRY}",
-                        "${awsRegion}"
-                    )
-                }
-            }
-        }
         stage('Build Docker Image') {
-            agent {
-                docker {
-                    image "${ECR_REGISTRY}/base-image:${versionTag}"
-                    args '-v /var/run/docker.sock:/var/run/docker.sock --privileged '
-                    reuseNode true
-                }
-            }
-            environment {
-                DOCKER_CONFIG = '/tmp/docker'
-            }
             steps {
                 script {
                     try {
                         dockerBuild(
-                            versionTag: versionTag,
-                            imageName: imageName
+                            imageName: 'terraform'
                         )
                     } catch (Exception buildError) {
                         currentBuild.result = 'FAILURE'
@@ -59,17 +30,11 @@ pipeline {
             }
         }
         stage('Run Trivy Scan') {
-            agent {
-                docker {
-                    image "${ECR_REGISTRY}/base-image:${versionTag}"
-                    args '-v /var/run/docker.sock:/var/run/docker.sock --privileged '
-                }
-            }
             steps {
                 script {
                     try {
-                        def imageNameAndTag = "${imageName}:${versionTag}"
-                        trivyScan(imageNameAndTag)
+                        def imageName = "terraform"
+                        trivyScan(imageName)
                     } catch (Exception trivyError) {
                         currentBuild.result = 'FAILURE'
                         error("Trivy scan failed: ${trivyError}")
@@ -78,18 +43,12 @@ pipeline {
             }
         }
         stage('Send Trivy Report') {
-            agent {
-                docker {
-                    image "${ECR_REGISTRY}/base-image:${versionTag}"
-                }
-            }
             steps {
                 script {
                     try {
-                        def imageNameAndTag = "${imageName}:${versionTag}"
                         def reportPath = "${WORKSPACE}/trivy-report.html"
-                        def recipient = "${emailRecipient}"
-                        emailReport(reportPath, imageNameAndTag, recipient)
+                        def recipient = "aswin@crunchops.com"
+                        emailReport(reportPath, recipient)
                     } catch (Exception emailError) {
                         currentBuild.result = 'FAILURE'
                         error("Email Send failed: ${emailError}")
@@ -105,10 +64,8 @@ pipeline {
                 script {
                     try {
                         ecrRegistry(
-                            ecrRepository: "${ECR_REGISTRY}/docker-images",
-                            imageName: "${imageName}",
-                            versionTag: "${versionTag}",
-                            awsRegion: "${awsRegion}"
+                            imageName: 'terraform',
+                            repoName: '	infra-images',
                         )
                     } catch (Exception pushError) {
                         currentBuild.result = 'FAILURE'
@@ -122,12 +79,12 @@ pipeline {
     post {
         success {
             script {
-                emailNotification.sendEmailNotification('success', "${emailRecipient}")
+                emailNotification.sendEmailNotification('success', 'aswin@crunchops.com')
             }
         }
         failure {
             script {
-                emailNotification.sendEmailNotification('failure', "${emailRecipient}")
+                emailNotification.sendEmailNotification('failure', 'aswin@crunchops.com')
             }
         }
         always {
