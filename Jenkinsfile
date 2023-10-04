@@ -65,7 +65,7 @@ pipeline {
                     try {
                         ecrRegistry(
                             imageName: 'terraform',
-                            repoName: '	infra-images',
+                            repoName: 'infra-images',
                         )
                     } catch (Exception pushError) {
                         currentBuild.result = 'FAILURE'
