@@ -1,0 +1,8 @@
+/usr/local/bin
+/app
+/usr/bin
+/lib/go-1.18
+/lib/python3.10
+/lib/x86_64-linux-gnu
+/usr/lib/python3
+/usr/local/lib/python3.10/dist-packages
